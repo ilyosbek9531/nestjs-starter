@@ -22,7 +22,6 @@ import { RolesGuard } from '../auth/roles.guard';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @UseGuards(JwtAuthGuard)
   @Post()
   async signupUser(@Body() payload: CreateUserDto): Promise<IUser> {
     const existingUser = await this.userService.findOne({
@@ -32,13 +31,10 @@ export class UserController {
     if (existingUser) {
       throw new BadRequestException();
     }
-    if (payload.role !== Role.USER) {
-      throw new UnauthorizedException();
-    }
+
     return await this.userService.createUser(payload);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get()
   async getAllUsers() {
     return await this.userService.getAllUsers();
