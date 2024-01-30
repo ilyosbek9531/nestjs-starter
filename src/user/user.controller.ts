@@ -18,15 +18,17 @@ import { Role } from '@prisma/client';
 import { Roles } from '../auth/roles.decorator';
 import { RolesGuard } from '../auth/roles.guard';
 
-@Controller('user')
+@Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @UseGuards(JwtAuthGuard)
   @Post()
   async signupUser(@Body() payload: CreateUserDto): Promise<IUser> {
     const existingUser = await this.userService.findOne({
-      email: payload.email,
+      username: payload.username,
     });
+
     if (existingUser) {
       throw new BadRequestException();
     }
@@ -37,13 +39,19 @@ export class UserController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Get()
+  async getAllUsers() {
+    return await this.userService.getAllUsers();
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Put()
   async updateUser(
     @Request() req,
     @Body() body: UpdateUserDto,
   ): Promise<IUser> {
     const user = await this.userService.findOne({
-      id: Number(body.id),
+      username: body.username,
     });
     if (!user) {
       throw new NotFoundException();
@@ -57,7 +65,7 @@ export class UserController {
     }
     return await this.userService.updateUser({
       where: {
-        id: Number(body.id),
+        username: body.username,
       },
       data: body,
     });
@@ -68,7 +76,7 @@ export class UserController {
   @Get('/:id')
   async getUserById(@Param('id') id: string): Promise<IUser> {
     const user = await this.userService.findOne({
-      id: Number(id),
+      id: id,
     });
     if (!user) {
       throw new NotFoundException();

@@ -9,14 +9,17 @@ export type IUser = Omit<User, 'password'>;
 export class UserService {
   constructor(private prisma: PrismaService) {}
 
+  async getAllUsers() {
+    return this.prisma.user.findMany();
+  }
+
   async findOne(
     userWhereUniqueInput: Prisma.UserWhereUniqueInput,
   ): Promise<Omit<User, 'password'> | null> {
     return this.prisma.user.findUnique({
       where: userWhereUniqueInput,
       select: {
-        email: true,
-        name: true,
+        username: true,
         id: true,
         role: true,
       },
