@@ -1,7 +1,8 @@
 import { ValidationPipe } from '@nestjs/common';
-import { NestFactory } from '@nestjs/core';
+import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { PrismaClientExceptionFilter } from './http-exception/http-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -16,6 +17,10 @@ async function bootstrap() {
     .addTag('Some tag')
     .addBearerAuth()
     .build();
+
+  const { httpAdapter } = app.get(HttpAdapterHost);
+
+  app.useGlobalFilters(new PrismaClientExceptionFilter(httpAdapter));
 
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('api-doc', app, document);
