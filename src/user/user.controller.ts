@@ -8,21 +8,36 @@ import {
   UnauthorizedException,
   BadRequestException,
   NotFoundException,
-  Put,
   Request,
+  Patch,
+  Delete,
 } from '@nestjs/common';
 import { IUser, UserService } from './user.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { CreateUserDto, UpdateUserDto } from './user.dto';
 import { Role } from '@prisma/client';
 import { Roles } from '../auth/roles.decorator';
 import { RolesGuard } from '../auth/roles.guard';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
+import {
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger';
+import { UserEntity } from './entities/user.entity';
 
 @Controller('users')
+@ApiTags('User')
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
+  @UseGuards(RolesGuard)
+  @Roles(Role.ADMIN, Role.SUPERUSER)
+  @ApiCreatedResponse({ type: UserEntity })
   async signupUser(@Body() payload: CreateUserDto): Promise<IUser> {
     const existingUser = await this.userService.findOne({
       username: payload.username,
@@ -36,12 +51,15 @@ export class UserController {
   }
 
   @Get()
+  @ApiOkResponse({ type: UserEntity, isArray: true })
   async getAllUsers() {
     return await this.userService.getAllUsers();
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Put()
+  @Patch()
+  @UseGuards(RolesGuard)
+  @Roles(Role.ADMIN, Role.SUPERUSER)
+  @ApiOkResponse({ type: UserEntity })
   async updateUser(
     @Request() req,
     @Body() body: UpdateUserDto,
@@ -67,9 +85,8 @@ export class UserController {
     });
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.ADMIN, Role.SUPERUSER)
   @Get('/:id')
+  @ApiOkResponse({ type: UserEntity })
   async getUserById(@Param('id') id: string): Promise<IUser> {
     const user = await this.userService.findOne({
       id: id,
@@ -78,5 +95,13 @@ export class UserController {
       throw new NotFoundException();
     }
     return user;
+  }
+
+  @Delete('/:id')
+  @UseGuards(RolesGuard)
+  @Roles(Role.ADMIN, Role.SUPERUSER)
+  @ApiOkResponse({ type: UserEntity })
+  async remove(@Param('id') id: string): Promise<IUser> {
+    return this.userService.deleteUser(id);
   }
 }

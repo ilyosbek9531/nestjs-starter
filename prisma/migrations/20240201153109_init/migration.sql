@@ -34,6 +34,7 @@ CREATE TABLE "Field" (
     "field_name" TEXT NOT NULL,
     "field_slug" TEXT NOT NULL,
     "field_type" "FieldType" NOT NULL,
+    "app_id" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -48,3 +49,6 @@ CREATE UNIQUE INDEX "App_app_slug_key" ON "App"("app_slug");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Field_field_slug_key" ON "Field"("field_slug");
+
+-- AddForeignKey
+ALTER TABLE "Field" ADD CONSTRAINT "Field_app_id_fkey" FOREIGN KEY ("app_id") REFERENCES "App"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

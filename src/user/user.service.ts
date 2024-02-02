@@ -73,11 +73,9 @@ export class UserService {
     return user;
   }
 
-  async deleteUser(
-    where: Prisma.UserWhereUniqueInput,
-  ): Promise<Omit<User, 'password'>> {
+  async deleteUser(id: string): Promise<Omit<User, 'password'>> {
     return this.prisma.user.delete({
-      where,
+      where: { id },
     });
   }
 }

@@ -24,6 +24,7 @@ model App {
   app_name  String     
   app_slug  String     @unique
   app_icon  String 
+  fields    Field[]
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
 }
@@ -33,6 +34,8 @@ model Field {
   field_name String
   field_slug String     @unique
   field_type FieldType
+  apps       App        @relation(fields: [app_id], references: [id])
+  app_id     String
   createdAt  DateTime   @default(now())
   updatedAt  DateTime   @updatedAt
 }
