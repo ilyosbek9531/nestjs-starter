@@ -39,14 +39,14 @@ export class UserController {
   // @Roles(Role.ADMIN, Role.SUPERUSER)
   @ApiCreatedResponse({ type: UserEntity })
   async signupUser(@Body() payload: CreateUserDto): Promise<IUser> {
-    const existingUser = await this.userService.findOne({
-      username: payload.username,
-    });
-    console.log('existingUser', existingUser);
+    // const existingUser = await this.userService.findOne({
+    //   username: payload.username,
+    // });
+    // console.log('existingUser', existingUser);
 
-    // if (existingUser) {
-    //   throw new BadRequestException();
-    // }
+    // // if (existingUser) {
+    // //   throw new BadRequestException();
+    // // }
 
     return await this.userService.createUser(payload);
   }

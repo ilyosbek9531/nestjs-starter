@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { $Enums, Field } from '@prisma/client';
+import { Field, FieldType } from '@prisma/client';
 
 export class FieldEntity implements Field {
   @ApiProperty()
@@ -11,8 +11,24 @@ export class FieldEntity implements Field {
   @ApiProperty()
   field_slug: string;
 
-  @ApiProperty()
-  field_type: $Enums.FieldType;
+  @ApiProperty({
+    enum: [
+      'SINGLE_LINE',
+      'MULTI_LINE',
+      'SINGLE_SELECT',
+      'MULTI_SELECT',
+      'PHOTO',
+      'PHOTOS',
+      'CHECKBOX',
+      'RADIO',
+      'PASSWORD',
+      'EMAIL',
+      'NUMBER',
+      'DATE',
+      'DATERANGE',
+    ],
+  })
+  field_type: FieldType;
 
   @ApiProperty()
   app_id: string;

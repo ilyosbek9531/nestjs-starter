@@ -1,4 +1,5 @@
 import {
+  ForbiddenException,
   Injectable,
   NotFoundException,
   UnauthorizedException,
@@ -28,7 +29,7 @@ export class AuthService {
     if (isPasswordMatch) {
       delete user.password;
       return user;
-    } else throw new UnauthorizedException();
+    } else throw new ForbiddenException('Password is wrong');
   }
 
   async login(user: User) {

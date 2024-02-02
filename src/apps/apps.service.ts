@@ -12,7 +12,11 @@ export class AppsService {
   }
 
   findAll() {
-    return this.prisma.app.findMany();
+    return this.prisma.app.findMany({
+      include: {
+        fields: true,
+      },
+    });
   }
 
   findOne(id: string) {
