@@ -32,7 +32,7 @@ export class FieldsController {
 
   @Post()
   @UseGuards(RolesGuard)
-  @Roles(Role.ADMIN, Role.SUPERUSER)
+  @Roles(Role.ADMIN, Role.SUPERADMIN)
   @ApiCreatedResponse({ type: FieldEntity })
   create(@Body() createFieldDto: CreateFieldDto) {
     return this.fieldsService.create(createFieldDto);
@@ -52,7 +52,7 @@ export class FieldsController {
 
   @Patch(':id')
   @UseGuards(RolesGuard)
-  @Roles(Role.ADMIN, Role.SUPERUSER)
+  @Roles(Role.ADMIN, Role.SUPERADMIN)
   @ApiOkResponse({ type: FieldEntity })
   update(@Param('id') id: string, @Body() updateFieldDto: UpdateFieldDto) {
     return this.fieldsService.update(id, updateFieldDto);
@@ -60,7 +60,7 @@ export class FieldsController {
 
   @Delete(':id')
   @UseGuards(RolesGuard)
-  @Roles(Role.ADMIN, Role.SUPERUSER)
+  @Roles(Role.ADMIN, Role.SUPERADMIN)
   @ApiOkResponse({ type: FieldEntity })
   remove(@Param('id') id: string) {
     return this.fieldsService.remove(id);

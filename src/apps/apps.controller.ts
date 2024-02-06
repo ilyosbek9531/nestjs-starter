@@ -32,7 +32,7 @@ export class AppsController {
 
   @Post()
   @UseGuards(RolesGuard)
-  @Roles(Role.ADMIN, Role.SUPERUSER)
+  @Roles(Role.ADMIN, Role.SUPERADMIN)
   @ApiCreatedResponse({ type: AppEntity })
   create(@Body() createAppDto: CreateAppDto) {
     return this.appsService.create(createAppDto);
@@ -52,7 +52,7 @@ export class AppsController {
 
   @Patch(':id')
   @UseGuards(RolesGuard)
-  @Roles(Role.ADMIN, Role.SUPERUSER)
+  @Roles(Role.ADMIN, Role.SUPERADMIN)
   @ApiOkResponse({ type: AppEntity })
   update(@Param('id') id: string, @Body() updateAppDto: UpdateAppDto) {
     return this.appsService.update(id, updateAppDto);
@@ -60,7 +60,7 @@ export class AppsController {
 
   @Delete(':id')
   @UseGuards(RolesGuard)
-  @Roles(Role.ADMIN, Role.SUPERUSER)
+  @Roles(Role.ADMIN, Role.SUPERADMIN)
   @ApiOkResponse({ type: AppEntity })
   remove(@Param('id') id: string) {
     return this.appsService.remove(id);

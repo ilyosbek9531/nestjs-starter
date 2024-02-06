@@ -43,7 +43,7 @@ model Field {
 enum Role {
   USER
   ADMIN
-  SUPERUSER
+  SUPERADMIN
 }
 
 enum FieldType {

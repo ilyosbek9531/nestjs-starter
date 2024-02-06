@@ -36,7 +36,7 @@ export class UserController {
 
   @Post()
   // @UseGuards(RolesGuard)
-  // @Roles(Role.ADMIN, Role.SUPERUSER)
+  // @Roles(Role.ADMIN, Role.SUPERADMIN)
   @ApiCreatedResponse({ type: UserEntity })
   async signupUser(@Body() payload: CreateUserDto): Promise<IUser> {
     // const existingUser = await this.userService.findOne({
@@ -59,7 +59,7 @@ export class UserController {
 
   @Patch()
   @UseGuards(RolesGuard)
-  @Roles(Role.ADMIN, Role.SUPERUSER)
+  @Roles(Role.ADMIN, Role.SUPERADMIN)
   @ApiOkResponse({ type: UserEntity })
   async updateUser(
     @Request() req,
@@ -74,7 +74,7 @@ export class UserController {
     if (
       user.id !== req.user.id &&
       req.user.role !== Role.ADMIN &&
-      req.user.role !== Role.SUPERUSER
+      req.user.role !== Role.SUPERADMIN
     ) {
       throw new UnauthorizedException();
     }
@@ -100,7 +100,7 @@ export class UserController {
 
   @Delete('/:id')
   @UseGuards(RolesGuard)
-  @Roles(Role.ADMIN, Role.SUPERUSER)
+  @Roles(Role.ADMIN, Role.SUPERADMIN)
   @ApiOkResponse({ type: UserEntity })
   async remove(@Param('id') id: string): Promise<IUser> {
     return this.userService.deleteUser(id);
